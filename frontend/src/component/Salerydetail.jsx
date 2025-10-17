@@ -2,6 +2,8 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import "./salerydetail.css";
 
+const BASE_URL=import.meta.env.VITE_BASE_URL;
+
 const Salerydetail = () => {
   const [salaryRecords, setSalaryRecords] = useState([]);
   const [form, setForm] = useState({
@@ -13,7 +15,7 @@ const Salerydetail = () => {
   const [status, setStatus] = useState("Pending");
   const [editId, setEditId] = useState(null);
 
-  const backendURL = "http://localhost:5000/api/salary";
+  const backendURL = `${BASE_URL}/api/salary`;
 
   // 🟢 Fetch all salary records
   const fetchSalaries = async () => {

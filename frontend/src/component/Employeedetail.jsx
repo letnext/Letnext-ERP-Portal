@@ -3,6 +3,8 @@ import axios from "axios";
 import Swal from "sweetalert2";
 import "./employeedetail.css";
 
+const BASE_URL=import.meta.env.VITE_BASE_URL;
+
 const Employeedetail = () => {
   const [data, setData] = useState([]);
   const [form, setForm] = useState({
@@ -21,7 +23,7 @@ const Employeedetail = () => {
     leaveDays: "",
   });
 
-  const API_URL = "http://localhost:5000/api/employee";
+  const API_URL = `${BASE_URL}/api/employee`;
 
   // Fetch all employees
   const fetchEmployees = async () => {

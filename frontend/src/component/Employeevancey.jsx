@@ -2,8 +2,10 @@ import React, { useState, useEffect } from "react";
 import Swal from "sweetalert2";
 import "./employeevancey.css";
 
+const BASE_URL=import.meta.env.VITE_BASE_URL;
+
 const Employeevancey = () => {
-  const backendURL = "http://localhost:5000/api/vacancies";
+  const backendURL = `${BASE_URL}/api/vacancies`;
 
   const [vacancies, setVacancies] = useState([]);
   const [form, setForm] = useState({

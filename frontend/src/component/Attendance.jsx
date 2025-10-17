@@ -3,6 +3,8 @@ import * as XLSX from "xlsx";
 import { saveAs } from "file-saver";
 import "./attendance.css";
 
+const BASE_URL=import.meta.env.VITE_BASE_URL;
+
 const Attendance = () => {
   const [employees, setEmployees] = useState([
     "Anusri C",
@@ -32,7 +34,7 @@ const Attendance = () => {
   });
   const [newEmployeeName, setNewEmployeeName] = useState("");
 
-  const backendURL = "http://localhost:5000/api/attendance";
+  const backendURL = `${BASE_URL}/api/attendance`;
 
   // 🟢 Fetch all attendance data from backend
   useEffect(() => {

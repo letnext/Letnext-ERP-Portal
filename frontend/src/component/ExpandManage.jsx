@@ -4,6 +4,7 @@ import { Line } from "react-chartjs-2";
 import axios from "axios";
 import Swal from "sweetalert2";
 
+
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -15,7 +16,9 @@ import {
   Legend,
 } from "chart.js";
 
-const API_URL = "http://localhost:5000/api/expenditure";
+const BASE_URL=import.meta.env.VITE_BASE_URL;
+
+const API_URL = `${BASE_URL}/api/expenditure`;
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
 

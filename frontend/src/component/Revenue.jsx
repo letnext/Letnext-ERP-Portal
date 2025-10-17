@@ -14,6 +14,8 @@ import {
   Legend,
 } from "chart.js";
 
+const BASE_URL=import.meta.env.VITE_BASE_URL;
+
 ChartJS.register(
   CategoryScale,
   LinearScale,
@@ -25,7 +27,7 @@ ChartJS.register(
 );
 
 const Revenue = () => {
-  const API_URL = "http://localhost:5000/api/revenue";
+  const API_URL = `${BASE_URL}/api/revenue`;
 
   const [revenueData, setRevenueData] = useState([]);
   const [form, setForm] = useState({
