@@ -1,0 +1,355 @@
+/* ==============================
+   GENERAL CONTAINER & HEADER
+   ============================== */
+.attendance-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 30px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 4px 25px rgba(0, 0, 0, 0.1);
+  font-family: "Poppins", sans-serif;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.attendance-header {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.attendance-title {
+  font-size: 2.4em;
+  color: #1a237e;
+  font-weight: 700;
+  margin-bottom: 10px;
+}
+
+.attendance-date {
+  font-size: 1.1em;
+  color: #6c757d;
+  font-weight: 500;
+}
+
+.attendance-date span {
+  font-weight: 600;
+  color: #1a237e;
+}
+
+/* ==============================
+   DATE PICKER
+   ============================== */
+.date-picker {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.date-label {
+  font-size: 1em;
+  font-weight: 600;
+  color: #555;
+}
+
+.date-input {
+  padding: 8px 14px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.date-input:hover {
+  border-color: #1a237e;
+}
+
+/* ==============================
+   ADD EMPLOYEE FORM
+   ============================== */
+.add-employee-form {
+  text-align: center;
+  margin-bottom: 25px;
+}
+
+.employee-input {
+  padding: 10px 12px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  width: 280px;
+  margin-right: 10px;
+  font-size: 1em;
+}
+
+.add-employee-btn {
+  padding: 10px 20px;
+  background-color: #495057;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s;
+}
+
+.add-employee-btn:hover {
+  background-color: #212529;
+}
+
+/* ==============================
+   TABLE STYLING
+   ============================== */
+.attendance-table-container {
+  overflow-x: auto;
+}
+
+.attendance-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 15px;
+}
+
+.attendance-table th,
+.attendance-table td {
+  padding: 14px;
+  border: 1px solid #dee2e6;
+  text-align: center;
+  font-size: 0.95em;
+}
+
+.attendance-table thead th {
+  background-color: #495057;
+  color: white;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.attendance-table tbody tr:nth-child(even) {
+  background-color: #f8f9fa;
+}
+
+.attendance-table tbody tr:hover {
+  background-color: #eef1f5;
+  transition: background 0.2s;
+}
+
+/* ==============================
+   STATUS & BUTTONS
+   ============================== */
+.status-cell {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  font-weight: 600;
+}
+
+.reason {
+  font-size: 0.8em;
+  color: #888;
+  font-style: italic;
+  max-width: 180px;
+  word-wrap: break-word;
+}
+
+.status-present { color: #28a745; }
+.status-absent { color: #dc3545; }
+.status-half-day { color: #ffc107; }
+.status-not-marked { color: #6c757d; }
+
+.action-buttons-cell {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.present-btn,
+.absent-btn,
+.halfday-btn,
+.holiday-btn,
+.training-btn {
+  padding: 7px 12px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-size: 0.9em;
+}
+
+.present-btn { background-color: #28a745; }
+.present-btn:hover { background-color: #218838; }
+
+.absent-btn { background-color: #dc3545; }
+.absent-btn:hover { background-color: #c82333; }
+
+.halfday-btn { background-color: #ffc107; color: #333; }
+.halfday-btn:hover { background-color: #e0a800; color: white; }
+
+.training-btn { background-color: #0749ff; }
+.training-btn:hover { background-color: #063ed0; }
+
+.holiday-btn { background-color: #d78821; }
+.holiday-btn:hover { background-color: #b66b18; }
+
+/* ==============================
+   SAVE BUTTON
+   ============================== */
+.save-container {
+  text-align: center;
+  margin-top: 30px;
+}
+
+.save-all-btn {
+  padding: 12px 28px;
+  background-color: #1a237e;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1.1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.save-all-btn:hover {
+  background-color: #111a62;
+}
+
+/* ==============================
+   MODAL
+   ============================== */
+.reason-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.reason-modal {
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  width: 90%;
+  max-width: 400px;
+  text-align: center;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.reason-modal h3 {
+  color: #1a237e;
+  margin-bottom: 10px;
+}
+
+.reason-modal p {
+  color: #6c757d;
+  margin-bottom: 15px;
+}
+
+.reason-input {
+  width: 90%;
+  padding: 10px;
+  border: 1px solid #ced4da;
+  border-radius: 6px;
+  font-size: 1em;
+  margin-bottom: 20px;
+}
+
+.modal-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+.submit-btn,
+.cancel-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: 600;
+  color: white;
+  transition: 0.3s;
+}
+
+.submit-btn { background-color: #28a745; }
+.submit-btn:hover { background-color: #218838; }
+
+.cancel-btn { background-color: #6c757d; }
+.cancel-btn:hover { background-color: #5a6268; }
+
+/* ==============================
+   RESPONSIVE DESIGN
+   ============================== */
+@media (max-width: 768px) {
+  .attendance-container {
+    padding: 20px;
+  }
+
+  .attendance-title {
+    font-size: 2em;
+  }
+
+  .employee-input {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+
+  .add-employee-btn {
+    width: 100%;
+  }
+
+  .attendance-table thead {
+    display: none;
+  }
+
+  .attendance-table,
+  .attendance-table tbody,
+  .attendance-table tr,
+  .attendance-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .attendance-table tr {
+    background: #fff;
+    margin-bottom: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 8px;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+    padding: 10px;
+  }
+
+  .attendance-table td {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    border: none;
+    font-size: 0.95em;
+  }
+
+  .attendance-table td::before {
+    content: attr(data-label);
+    font-weight: 600;
+    color: #495057;
+  }
+
+  .action-buttons-cell {
+    justify-content: flex-end;
+    flex-wrap: wrap;
+  }
+
+  .save-all-btn {
+    width: 100%;
+  }
+}
