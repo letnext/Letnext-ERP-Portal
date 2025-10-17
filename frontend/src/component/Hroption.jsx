@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom"; // Import useNavigate
-import "./Hroption.css";
+import "./hroption.css";
 
 const Hroption = () => {
   const navigate = useNavigate(); // Get the navigate function
