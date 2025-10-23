@@ -1,34 +1,64 @@
 import Attendance from "../models/Attendance.js";
+import Staff from "../models/Staff.js";
 
-// GET all attendance records
-export const getAllAttendance = async (req, res) => {
+// ✅ Get all staffs
+export const getAllStaffs = async (req, res) => {
   try {
-    const records = await Attendance.find();
-    res.json(records);
-  } catch (error) {
-    res.status(500).json({ message: "Error fetching attendance", error });
+    const staffs = await Staff.find();
+    res.json(staffs);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
 
-// POST new attendance
-export const addAttendance = async (req, res) => {
+// ✅ Add staff
+export const addStaff = async (req, res) => {
+  try {
+    const { name } = req.body;
+    const existing = await Staff.findOne({ name });
+    if (existing) return res.status(400).json({ message: "Employee already exists" });
+    const staff = new Staff({ name });
+    await staff.save();
+    res.status(201).json(staff);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ✅ Delete staff
+export const deleteStaff = async (req, res) => {
+  try {
+    await Staff.findOneAndDelete({ name: req.params.name });
+    res.json({ message: "Employee deleted" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
+
+// ✅ Save attendance
+export const saveAttendance = async (req, res) => {
   try {
     const { date, employee, status, reason } = req.body;
-
-    if (!date || !employee || !status)
-      return res.status(400).json({ message: "Missing required fields" });
-
-    let existing = await Attendance.findOne({ date, employee });
+    const existing = await Attendance.findOne({ date, employee });
     if (existing) {
       existing.status = status;
       existing.reason = reason;
       await existing.save();
-      return res.json({ message: "Updated successfully", data: existing });
+    } else {
+      await Attendance.create({ date, employee, status, reason });
     }
+    res.status(200).json({ message: "Attendance saved" });
+  } catch (err) {
+    res.status(500).json({ message: err.message });
+  }
+};
 
-    const newRecord = await Attendance.create({ date, employee, status, reason });
-    res.status(201).json({ message: "Added successfully", data: newRecord });
-  } catch (error) {
-    res.status(500).json({ message: "Error saving attendance", error });
+// ✅ Get all attendance
+export const getAllAttendance = async (req, res) => {
+  try {
+    const data = await Attendance.find();
+    res.json(data);
+  } catch (err) {
+    res.status(500).json({ message: err.message });
   }
 };
