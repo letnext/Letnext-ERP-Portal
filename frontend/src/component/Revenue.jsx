@@ -14,7 +14,7 @@ import {
   Legend,
 } from "chart.js";
 
-const BASE_URL=import.meta.env.VITE_BASE_URL;
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 ChartJS.register(
   CategoryScale,
@@ -47,6 +47,7 @@ const Revenue = () => {
   });
   const [search, setSearch] = useState("");
   const [filter, setFilter] = useState("all");
+  const [monthFilter, setMonthFilter] = useState(""); // ✅ new month filter
   const [totalRevenue, setTotalRevenue] = useState(0);
   const [chartView, setChartView] = useState("monthly");
   const [showTable, setShowTable] = useState(true);
@@ -143,6 +144,7 @@ const Revenue = () => {
     }
   };
 
+  // ✅ Filter by search, date range, and month
   const filteredData = revenueData.filter((record) => {
     const searchLower = search.toLowerCase();
     const recordDate = new Date(record.date);
@@ -164,9 +166,14 @@ const Revenue = () => {
 
     const isThisYear = recordDate.getFullYear() === today.getFullYear();
 
+    const matchesMonthFilter = monthFilter
+      ? record.date.startsWith(monthFilter)
+      : true;
+
     if (filter === "day" && !isToday) return false;
     if (filter === "month" && !isThisMonth) return false;
     if (filter === "year" && !isThisYear) return false;
+    if (!matchesMonthFilter) return false;
 
     return isMatch;
   });
@@ -230,7 +237,6 @@ const Revenue = () => {
     },
   };
 
-  // ✅ Fixed print logic
   const handlePrint = () => {
     const printContent = document.getElementById("print-section").innerHTML;
     const printWindow = window.open("", "_blank", "width=900,height=650");
@@ -262,29 +268,93 @@ const Revenue = () => {
       <h1 className="revenue-heading">Revenue Management</h1>
 
       <form className="revenue-form" onSubmit={handleAddRecord}>
-        <input type="date" value={form.date} onChange={(e) => setForm({ ...form, date: e.target.value })} />
-        <input type="text" placeholder="Project Name" value={form.projectName} onChange={(e) => setForm({ ...form, projectName: e.target.value })} />
-        <input type="text" placeholder="Client Name" value={form.clientName} onChange={(e) => setForm({ ...form, clientName: e.target.value })} />
-        <input type="number" placeholder="Amount (INR)" value={form.amount} onChange={(e) => setForm({ ...form, amount: e.target.value })} />
-        <input type="text" placeholder="Employee Name" value={form.employeeName} onChange={(e) => setForm({ ...form, employeeName: e.target.value })} />
-        <button type="submit" className="add-record-btn">Add Record</button>
+        <input
+          type="date"
+          value={form.date}
+          onChange={(e) => setForm({ ...form, date: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Project Name"
+          value={form.projectName}
+          onChange={(e) => setForm({ ...form, projectName: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Client Name"
+          value={form.clientName}
+          onChange={(e) => setForm({ ...form, clientName: e.target.value })}
+        />
+        <input
+          type="number"
+          placeholder="Amount (INR)"
+          value={form.amount}
+          onChange={(e) => setForm({ ...form, amount: e.target.value })}
+        />
+        <input
+          type="text"
+          placeholder="Employee Name"
+          value={form.employeeName}
+          onChange={(e) => setForm({ ...form, employeeName: e.target.value })}
+        />
+        <button type="submit" className="add-record-btn">
+          Add Record
+        </button>
       </form>
 
       <div className="utility-bar">
-        <input type="text" placeholder="Search..." className="search-box" value={search} onChange={(e) => setSearch(e.target.value)} />
+        <input
+          type="text"
+          placeholder="Search..."
+          className="search-box"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+        />
+
+        {/* ✅ Month filter input */}
+        <input
+          type="month"
+          className="month-selector"
+          value={monthFilter}
+          onChange={(e) => setMonthFilter(e.target.value)}
+        />
+
         <div className="button-group">
           <div className="filter-buttons">
             {["all", "day", "month", "year"].map((f) => (
-              <button key={f} className={filter === f ? "active" : ""} onClick={() => setFilter(f)}>
-                {f === "all" ? "All" : f === "day" ? "Today" : f === "month" ? "This Month" : "This Year"}
+              <button
+                key={f}
+                className={filter === f ? "active" : ""}
+                onClick={() => setFilter(f)}
+              >
+                {f === "all"
+                  ? "All"
+                  : f === "day"
+                  ? "Today"
+                  : f === "month"
+                  ? "This Month"
+                  : "This Year"}
               </button>
             ))}
           </div>
+
           <div className="view-toggle">
-            <button className={showTable ? "active" : ""} onClick={() => setShowTable(true)}>Table View</button>
-            <button className={!showTable ? "active" : ""} onClick={() => setShowTable(false)}>Chart View</button>
+            <button
+              className={showTable ? "active" : ""}
+              onClick={() => setShowTable(true)}
+            >
+              Table View
+            </button>
+            <button
+              className={!showTable ? "active" : ""}
+              onClick={() => setShowTable(false)}
+            >
+              Chart View
+            </button>
           </div>
-          <button className="print-btn" onClick={handlePrint}>Print Records</button>
+          <button className="print-btn" onClick={handlePrint}>
+            Print Records
+          </button>
         </div>
       </div>
 
@@ -311,14 +381,78 @@ const Revenue = () => {
                   <tr key={record._id}>
                     {editingId === record._id ? (
                       <>
-                        <td><input type="date" className="edit-input" value={editingForm.date} onChange={(e) => setEditingForm({ ...editingForm, date: e.target.value })} /></td>
-                        <td><input type="text" className="edit-input" value={editingForm.projectName} onChange={(e) => setEditingForm({ ...editingForm, projectName: e.target.value })} /></td>
-                        <td><input type="text" className="edit-input" value={editingForm.clientName} onChange={(e) => setEditingForm({ ...editingForm, clientName: e.target.value })} /></td>
-                        <td><input type="number" className="edit-input" value={editingForm.amount} onChange={(e) => setEditingForm({ ...editingForm, amount: e.target.value })} /></td>
-                        <td><input type="text" className="edit-input" value={editingForm.employeeName} onChange={(e) => setEditingForm({ ...editingForm, employeeName: e.target.value })} /></td>
+                        <td>
+                          <input
+                            type="date"
+                            className="edit-input"
+                            value={editingForm.date}
+                            onChange={(e) =>
+                              setEditingForm({
+                                ...editingForm,
+                                date: e.target.value,
+                              })
+                            }
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            className="edit-input"
+                            value={editingForm.projectName}
+                            onChange={(e) =>
+                              setEditingForm({
+                                ...editingForm,
+                                projectName: e.target.value,
+                              })
+                            }
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            className="edit-input"
+                            value={editingForm.clientName}
+                            onChange={(e) =>
+                              setEditingForm({
+                                ...editingForm,
+                                clientName: e.target.value,
+                              })
+                            }
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="number"
+                            className="edit-input"
+                            value={editingForm.amount}
+                            onChange={(e) =>
+                              setEditingForm({
+                                ...editingForm,
+                                amount: e.target.value,
+                              })
+                            }
+                          />
+                        </td>
+                        <td>
+                          <input
+                            type="text"
+                            className="edit-input"
+                            value={editingForm.employeeName}
+                            onChange={(e) =>
+                              setEditingForm({
+                                ...editingForm,
+                                employeeName: e.target.value,
+                              })
+                            }
+                          />
+                        </td>
                         <td className="action-buttons no-print">
-                          <button onClick={handleSave} className="save-btn">Save</button>
-                          <button onClick={handleCancel} className="cancel-btn">Cancel</button>
+                          <button onClick={handleSave} className="save-btn">
+                            Save
+                          </button>
+                          <button onClick={handleCancel} className="cancel-btn">
+                            Cancel
+                          </button>
                         </td>
                       </>
                     ) : (
@@ -329,15 +463,27 @@ const Revenue = () => {
                         <td>₹ {record.amount.toLocaleString()}</td>
                         <td>{record.employeeName}</td>
                         <td className="action-buttons no-print">
-                          <button onClick={() => handleEdit(record)} className="edit-btn">Edit</button>
-                          <button onClick={() => handleDelete(record._id)} className="delete-btn">Delete</button>
+                          <button
+                            onClick={() => handleEdit(record)}
+                            className="edit-btn"
+                          >
+                            Edit
+                          </button>
+                          <button
+                            onClick={() => handleDelete(record._id)}
+                            className="delete-btn"
+                          >
+                            Delete
+                          </button>
                         </td>
                       </>
                     )}
                   </tr>
                 ))
               ) : (
-                <tr><td colSpan="6">No records found</td></tr>
+                <tr>
+                  <td colSpan="6">No records found</td>
+                </tr>
               )}
             </tbody>
           </table>
@@ -345,8 +491,18 @@ const Revenue = () => {
       ) : (
         <div className="chart-section">
           <div className="chart-view-buttons">
-            <button className={chartView === "monthly" ? "active" : ""} onClick={() => setChartView("monthly")}>Monthly</button>
-            <button className={chartView === "yearly" ? "active" : ""} onClick={() => setChartView("yearly")}>Yearly</button>
+            <button
+              className={chartView === "monthly" ? "active" : ""}
+              onClick={() => setChartView("monthly")}
+            >
+              Monthly
+            </button>
+            <button
+              className={chartView === "yearly" ? "active" : ""}
+              onClick={() => setChartView("yearly")}
+            >
+              Yearly
+            </button>
           </div>
           <div className="chart-container">
             <Line data={getChartData()} options={chartOptions} />

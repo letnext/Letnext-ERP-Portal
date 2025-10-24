@@ -180,7 +180,16 @@ const Attendance = () => {
     setSelectedDate(dateValue);
   };
 
-  // ✅ Excel Export
+  // ✅ Count Summary
+  const getSummary = (dayData) => {
+    const summary = { Present: 0, Absent: 0, Training: 0, "Half Day": 0, Holiday: 0 };
+    Object.values(dayData || {}).forEach((rec) => {
+      if (rec.status && summary[rec.status] !== undefined) summary[rec.status]++;
+    });
+    return summary;
+  };
+
+  // ✅ Excel Export (includes summary)
   const downloadExcel = (type) => {
     if (Object.keys(attendanceData).length === 0) {
       Swal.fire("Info", "No attendance data available!", "info");
@@ -207,6 +216,14 @@ const Attendance = () => {
             Reason: dayData[emp].reason || "-",
           });
         }
+        // add daily summary row
+        const sum = getSummary(dayData);
+        rows.push({
+          Date: date,
+          Employee: "→ Summary",
+          Status: `P:${sum.Present} | A:${sum.Absent} | T:${sum.Training} | H:${sum["Half Day"]} | Ho:${sum.Holiday}`,
+          Reason: "-",
+        });
       }
     });
 
@@ -233,6 +250,7 @@ const Attendance = () => {
     Swal.fire("Success", `${type} Excel downloaded successfully!`, "success");
   };
 
+  // ✅ Print (includes summary)
   const handlePrint = () => {
     if (!selectedDate) {
       Swal.fire("Warning", "Select a date first!", "warning");
@@ -240,6 +258,8 @@ const Attendance = () => {
     }
 
     const currentDayData = attendanceData[selectedDate] || {};
+    const summary = getSummary(currentDayData);
+
     const printableHTML = `
       <html>
         <head>
@@ -249,6 +269,7 @@ const Attendance = () => {
             h2 { text-align: center; }
             table { width: 100%; border-collapse: collapse; margin-top: 20px; }
             th, td { border: 1px solid #ccc; padding: 8px; text-align: center; }
+            .summary-table { margin-top: 30px; border-top: 2px solid #333; }
           </style>
         </head>
         <body>
@@ -274,6 +295,24 @@ const Attendance = () => {
                 .join("")}
             </tbody>
           </table>
+
+          <h3>Summary</h3>
+          <table class="summary-table">
+            <tr>
+              <th>Present</th>
+              <th>Absent</th>
+              <th>Training</th>
+              <th>Half Day</th>
+              <th>Holiday</th>
+            </tr>
+            <tr>
+              <td>${summary.Present}</td>
+              <td>${summary.Absent}</td>
+              <td>${summary.Training}</td>
+              <td>${summary["Half Day"]}</td>
+              <td>${summary.Holiday}</td>
+            </tr>
+          </table>
         </body>
       </html>
     `;
@@ -286,6 +325,7 @@ const Attendance = () => {
 
   const statusOptions = ["Present", "Absent", "Training", "Half Day", "Holiday"];
   const currentDayData = selectedDate ? attendanceData[selectedDate] || {} : {};
+  const summaryData = getSummary(currentDayData);
 
   return (
     <div className="attendance-container">
@@ -344,9 +384,7 @@ const Attendance = () => {
                   <td>
                     <select
                       value={record.status || ""}
-                      onChange={(e) =>
-                        handleStatusChange(name, e.target.value)
-                      }
+                      onChange={(e) => handleStatusChange(name, e.target.value)}
                       disabled={!selectedDate}
                     >
                       <option value="">Select</option>
@@ -365,9 +403,7 @@ const Attendance = () => {
                         type="text"
                         placeholder="Enter reason"
                         value={record.reason || ""}
-                        onChange={(e) =>
-                          handleReasonChange(name, e.target.value)
-                        }
+                        onChange={(e) => handleReasonChange(name, e.target.value)}
                       />
                     )}
                   </td>
@@ -386,21 +422,15 @@ const Attendance = () => {
         </tbody>
       </table>
 
-      {selectedDate && employees.length > 0 && (
+      {/* ✅ Daily summary display */}
+      {selectedDate && (
         <div className="summary">
           <h3>Summary for {selectedDate}</h3>
-          <ul>
-            {employees.map((name) => {
-              const rec = currentDayData[name];
-              if (!rec || !rec.status) return null;
-              return (
-                <li key={name}>
-                  {name}: {rec.status}
-                  {rec.reason && ` — (${rec.reason})`}
-                </li>
-              );
-            })}
-          </ul>
+          <p>
+            Present: <b>{summaryData.Present}</b> | Absent: <b>{summaryData.Absent}</b> | Training:{" "}
+            <b>{summaryData.Training}</b> | Half Day: <b>{summaryData["Half Day"]}</b> | Holiday:{" "}
+            <b>{summaryData.Holiday}</b>
+          </p>
         </div>
       )}
     </div>

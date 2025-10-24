@@ -908,3 +908,25 @@ html, body {
     width: 100%;
   }
 }
+input[type="month"] {
+  padding: 8px 12px;
+  border: 2px solid #8b5cf6; /* soft violet border */
+  border-radius: 8px;
+  font-size: 16px;
+  background-color: #f9f9ff;
+  color: #333;
+  outline: none;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+input[type="month"]:hover {
+  border-color: #7c3aed;
+  background-color: #f3e8ff;
+}
+
+input[type="month"]:focus {
+  border-color: #6d28d9;
+  box-shadow: 0 0 6px rgba(109, 40, 217, 0.4);
+  background-color: #fff;
+}

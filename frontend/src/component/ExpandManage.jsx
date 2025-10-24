@@ -4,7 +4,6 @@ import { Line } from "react-chartjs-2";
 import axios from "axios";
 import Swal from "sweetalert2";
 
-
 import {
   Chart as ChartJS,
   CategoryScale,
@@ -16,8 +15,7 @@ import {
   Legend,
 } from "chart.js";
 
-const BASE_URL=import.meta.env.VITE_BASE_URL;
-
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_URL = `${BASE_URL}/api/expenditure`;
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend);
@@ -26,6 +24,7 @@ const ExpandManager = () => {
   const [data, setData] = useState([]);
   const [filter, setFilter] = useState("all");
   const [search, setSearch] = useState("");
+  const [selectedMonth, setSelectedMonth] = useState(""); // ✅ New month filter state
   const [form, setForm] = useState({
     date: "",
     name: "",
@@ -139,6 +138,7 @@ const ExpandManager = () => {
     }
   };
 
+  // ✅ Filtering logic
   const filteredData = data.filter((item) => {
     const recordDate = new Date(item.date);
     const today = new Date();
@@ -156,6 +156,17 @@ const ExpandManager = () => {
     if (filter === "month" && !isThisMonth) return false;
     if (filter === "year" && !isThisYear) return false;
 
+    // ✅ If user selected a specific month
+    if (selectedMonth) {
+      const selected = new Date(selectedMonth);
+      if (
+        recordDate.getMonth() !== selected.getMonth() ||
+        recordDate.getFullYear() !== selected.getFullYear()
+      ) {
+        return false;
+      }
+    }
+
     if (
       search &&
       !(
@@ -171,7 +182,6 @@ const ExpandManager = () => {
 
   const totalExpenditure = filteredData.reduce((sum, record) => sum + record.amount, 0);
 
-  // ✅ Fixed Print Function
   const handlePrint = () => {
     const printContent = document.getElementById("print-section");
     const printWindow = window.open("", "", "width=1000,height=700");
@@ -306,6 +316,15 @@ const ExpandManager = () => {
               This Year
             </button>
           </div>
+
+          {/* ✅ New month picker */}
+          <input
+            type="month"
+            className="month-selector"
+            value={selectedMonth}
+            onChange={(e) => setSelectedMonth(e.target.value)}
+          />
+
           <div className="view-toggle">
             <button className={showTable ? "active" : ""} onClick={() => setShowTable(true)}>
               Table View
@@ -347,7 +366,9 @@ const ExpandManager = () => {
                             type="date"
                             className="edit-input"
                             value={editingForm.date}
-                            onChange={(e) => setEditingForm({ ...editingForm, date: e.target.value })}
+                            onChange={(e) =>
+                              setEditingForm({ ...editingForm, date: e.target.value })
+                            }
                           />
                         </td>
                         <td>
@@ -355,7 +376,9 @@ const ExpandManager = () => {
                             type="text"
                             className="edit-input"
                             value={editingForm.name}
-                            onChange={(e) => setEditingForm({ ...editingForm, name: e.target.value })}
+                            onChange={(e) =>
+                              setEditingForm({ ...editingForm, name: e.target.value })
+                            }
                           />
                         </td>
                         <td>
